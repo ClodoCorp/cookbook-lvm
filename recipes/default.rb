@@ -20,17 +20,9 @@
 package 'lvm2'
 chef_gem 'di-ruby-lvm'
 
-
-service "lvm2" do
-  action [ :enable, :start ]
-#  supports :status => true, :restart => true, :reload => true
-end
-
-
 template "/etc/lvm/lvm.conf" do
   source "lvm.conf.erb"
   owner "root"
   mode 0644
   action :create
-  notifies :start, "service[bird]", :immediately
 end
