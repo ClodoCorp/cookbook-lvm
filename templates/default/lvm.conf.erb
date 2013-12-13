@@ -4,7 +4,8 @@
 <%= k %>
 <% if v.is_a(String)? %>
 <%= v.to_s %>
-<% else -%>
+<% end -%>
+<% if !v.is_a(String)? %>
 <%= v.to_s %>
 <% end -%>
 <% end -%>
