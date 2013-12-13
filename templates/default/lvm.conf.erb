@@ -1,7 +1,11 @@
 <% node["lvm"].keys.each do |section| -%>
 <%= "#{section} {" %>
 <% node["lvm"][section].each do |k, v| -%>
-<%= "  #{k} = #{v}\n" %>
+<% if v.is_a?(String) -%>
+<%= "  #{k} = \"#{v}\"" %>
+<% else -%>
+<%= "  #{k} = #{v}" %>
+<% end -%>
 <% end -%>
 <%= "}" %>
 <% end -%>
