@@ -3,9 +3,9 @@
 <% options.each do |k, v| -%>
 <%= k %>
 <% if v.is_a(String)? %>
-<%= v %>
+<%= v.to_s %>
 <% else -%>
-<%= v %>
+<%= v.to_s %>
 <% end -%>
 <% end -%>
 <%= "}" %>
