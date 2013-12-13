@@ -1,7 +1,12 @@
 <% node["lvm"].each do |section, options| -%>
 <%= "#{section} {" %>
 <% options.each do |k, v| -%>
-<%= if v.is_a(String)? "  #{k} = \"#{v}\"" else "  #{k} = #{v}" end %>
+<%= "  #{k} = " %>
+<% if v.is_a(String)? %>
+<%= "\"#{v}\"" %>
+<% else -%>
+<%= "#{v}" %>
+<% end -%>
 <% end -%>
 <%= "}" %>
 <% end -%>
