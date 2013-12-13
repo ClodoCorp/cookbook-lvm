@@ -1,6 +1,6 @@
 <% node["lvm"].each do |section| -%>
 <%= "#{section} {" %>
-<% node["lvm"][section].each do |k, v| -%>
+<% section.each do |k, v| -%>
 <%= "  #{k} = #{v}" %>
 <% end -%>
 <%= "}" %>
