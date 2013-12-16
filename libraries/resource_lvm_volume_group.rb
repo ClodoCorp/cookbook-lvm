@@ -24,7 +24,11 @@ class Chef
     # The lvm_volume_group resource
     #
     class LvmVolumeGroup < Chef::Resource
-      include Chef::DSL::Recipe
+      if  Chef::Version.new(Chef::VERSION) <= Chef::Version.new( "10.16.2" )
+        include Chef::Mixin::RecipeDefinitionDSLCore
+      else
+        include Chef::DSL::Recipe
+      end
 
       # Logical volumes to be created in the volume group
       attr_reader :logical_volumes
