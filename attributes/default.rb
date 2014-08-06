@@ -71,3 +71,5 @@ default['lvm']['conf']['activation']['thin_check_executable'] = '/sbin/thin_chec
 default['lvm']['conf']['activation']['use_mlockall'] = 0
 default['lvm']['conf']['activation']['monitoring'] = 0
 default['lvm']['conf']['activation']['polling_interval'] = 15
+
+default['lvm']['packages'] = ['lvm2']
