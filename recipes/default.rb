@@ -43,7 +43,7 @@ node['lvm']['devices'].each do |dev|
   when 'vg'
     ruby_block "create vg #{dev['name']}" do
       block do
-        lv = Mixlib::ShellOut.new("vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']}-y #{dev['name']} #{dev['target']}").run_command
+        lv = Mixlib::ShellOut.new("vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']} -y #{dev['name']} #{dev['target']}").run_command
         puts lv.stdout
         puts lv.stderr
         lv.error!
