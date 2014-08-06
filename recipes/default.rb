@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-include 'lvm'
-
 node['lvm']['packages'].each do |pkg|
   package pkg
 end
@@ -36,12 +34,18 @@ node['lvm']['devices'].each do |dev|
     when 'pv'
     ruby_block "create pv #{dev['name']}" do
       block do
+        require 'rubygems'
+        Gem.clear_paths
+        require 'lvm'
         lvm.raw("pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z -y #{dev['name']}")
       end
     end
     when 'vg'
     ruby_block "create vg #{dev['name']}" do
       block do
+        require 'rubygems'
+        Gem.clear_paths
+        require 'lvm'
         lvm.raw("vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']}-y #{dev['name']} #{dev['target']}")
       end
     end
