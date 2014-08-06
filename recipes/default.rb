@@ -17,12 +17,33 @@
 # limitations under the License.
 #
 
-package 'lvm2'
-chef_gem 'di-ruby-lvm'
+node['lvm']['packages'].each do |pkg|
+  package pkg
+end
 
-template "/etc/lvm/lvm.conf" do
-  source "lvm.conf.erb"
-  owner "root"
+template '/etc/lvm/lvm.conf' do
+  source 'lvm.conf.erb'
+  owner 'root'
   mode 0644
+  variables(:variables => node['lvm']['conf'])
   action :create
+end
+
+node['lvm']['devices'].each do |dev|
+  case dev['type']
+    when 'pv'
+    ruby_block "create pv #{dev['name']}" do
+      block do
+        require 'lvm'
+        lvm.raw("pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z -y #{dev['name']}")
+      end
+    end
+    when 'vg'
+    ruby_block "create vg #{dev['name']}" do
+      block do
+        require 'lvm'
+        lvm.raw("vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']}-y #{dev['name']} #{dev['target']}")
+      end
+    end
+  end
 end

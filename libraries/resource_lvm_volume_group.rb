@@ -24,7 +24,7 @@ class Chef
     # The lvm_volume_group resource
     #
     class LvmVolumeGroup < Chef::Resource
-      if  Chef::Version.new(Chef::VERSION) <= Chef::Version.new( "10.16.2" )
+      if  Chef::Version.new(Chef::VERSION) <= Chef::Version.new('10.16.2')
         include Chef::Mixin::RecipeDefinitionDSLCore
       else
         include Chef::DSL::Recipe

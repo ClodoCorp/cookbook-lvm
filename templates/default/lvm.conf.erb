@@ -1,6 +1,7 @@
-<% node["lvm"].keys.each do |section| -%>
+<% @variables.keys.each do |section| -%>
 <%= "#{section} {" %>
 <% node["lvm"][section].each do |k, v| -%>
+<% next if v.nil? -%>
 <% if v.is_a?(String) -%>
 <%= "  #{k} = \"#{v}\"" %>
 <% else -%>

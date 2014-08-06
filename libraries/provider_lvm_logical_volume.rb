@@ -123,19 +123,19 @@ class Chef
 
       private
 
-        # Converts the device name to the dm name format
-        #
-        # The device mapper will double any hyphens found in a volume group or
-        # logical volume name so that it can properly locate the separator between
-        # the volume group and the logical volume in the device name.
-        #
-        # @param name [String] the name to map
-        #
-        # @return [String] the mapped dm name
-        #
-        def to_dm_name(name)
-          name.gsub(/-/, '--')
-        end
+      # Converts the device name to the dm name format
+      #
+      # The device mapper will double any hyphens found in a volume group or
+      # logical volume name so that it can properly locate the separator between
+      # the volume group and the logical volume in the device name.
+      #
+      # @param name [String] the name to map
+      #
+      # @return [String] the mapped dm name
+      #
+      def to_dm_name(name)
+        name.gsub(/-/, '--')
+      end
 
         # Checks if the device is formatted with the given file system type
         #
@@ -152,7 +152,6 @@ class Chef
           blkid = shell_out("blkid -o value -s TYPE #{device_name}")
           blkid.exitstatus == 0 && blkid.stdout.strip == fs_type.strip
         end
-
     end
   end
 end
