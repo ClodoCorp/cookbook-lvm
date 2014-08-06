@@ -34,21 +34,17 @@ node['lvm']['devices'].each do |dev|
     when 'pv'
     ruby_block "create pv #{dev['name']}" do
       block do
-        require 'rubygems'
-        Gem.clear_paths
-        require 'lvm'
-        lvm = LVM::LVM.new(:command => '/sbin/lvm')
-        lvm.raw("pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z -y #{dev['name']}")
+        execute "create pv #{dev['name']}" do
+          command "pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z -y #{dev['name']}"
+        end
       end
     end
     when 'vg'
     ruby_block "create vg #{dev['name']}" do
       block do
-        require 'rubygems'
-        Gem.clear_paths
-        require 'lvm'
-        lvm = LVM::LVM.new(:command => '/sbin/lvm')
-        lvm.raw("vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']}-y #{dev['name']} #{dev['target']}")
+        execute "create vg #{dev['name']}" do
+          command "vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']}-y #{dev['name']} #{dev['target']}"
+        end
       end
     end
   end
