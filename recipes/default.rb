@@ -34,7 +34,7 @@ node['lvm']['devices'].each do |dev|
   when 'pv'
     ruby_block "create pv #{dev['name']}" do
       block do
-        lv = Mixlib::ShellOut.new("pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z -y #{dev['name']}").run_command
+        lv = Mixlib::ShellOut.new("pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z y -y #{dev['name']}").run_command
         puts lv.stdout
         puts lv.stderr
         lv.error!
