@@ -31,20 +31,19 @@ end
 
 node['lvm']['devices'].each do |dev|
   case dev['type']
-    when 'pv'
+  when 'pv'
     ruby_block "create pv #{dev['name']}" do
       block do
-        execute "create pv #{dev['name']}" do
-          command "pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z -y #{dev['name']}"
-        end
+        output = Mixlib::ShellOut.new("pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalv\
+olumesize #{dev['setphysicalvolumesize']} -Z -y #{dev['name']}").run_command.stdout.chomp!
+        puts output
       end
     end
-    when 'vg'
+  when 'vg'
     ruby_block "create vg #{dev['name']}" do
       block do
-        execute "create vg #{dev['name']}" do
-          command "vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']}-y #{dev['name']} #{dev['target']}"
-        end
+        output = Mixlib::ShellOut.new("vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']}-y #{dev['name']} #{dev['target']}").run_command.stdout.chomp!
+        puts output
       end
     end
   end
