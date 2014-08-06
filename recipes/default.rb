@@ -34,20 +34,34 @@ node['lvm']['devices'].each do |dev|
   when 'pv'
     ruby_block "create pv #{dev['name']}" do
       block do
-        lv = Mixlib::ShellOut.new("pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z y -y #{dev['name']}").run_command
-        puts lv.stdout
-        puts lv.stderr
-        lv.error!
+        lvm = Mixlib::ShellOut.new("pvcreate --norestorefile --metadatatype #{dev['metadatatype']} --metadatasize #{dev['metadatasize']} --dataalignmentoffset #{dev['dataalignmentoffset']} --dataalignment #{dev['dataalignment']} --setphysicalvolumesize #{dev['setphysicalvolumesize']} -Z y -y #{dev['name']}").run_command
+        puts lvm.stdout
+        puts lvm.stderr
+        lvm.error!
       end
       not_if "pvs | grep -q #{dev['name']}"
+    end
+  when 'lv'
+    ruby_block "create lv #{dev['name']}" do
+      block do
+        if dev['thin']
+          lvm = Mixlib::ShellOut.new("lvcreate -l #{dev['size']} --type thin-pool --thinpool #{dev['name']} #{dev['target']}").run_command
+        else
+          lvm = Mixlib::ShellOut.new("lvcreate --name #{dev['name']} -l #{dev['size']} #{dev['target']}").run_command
+        end
+        puts lvm.stdout
+        puts lvm.stderr
+        lvm.error!
+      end
+      not_if "lvs | grep -q #{dev['name']}"
     end
   when 'vg'
     ruby_block "create vg #{dev['name']}" do
       block do
-        lv = Mixlib::ShellOut.new("vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']} -y #{dev['name']} #{dev['target']}").run_command
-        puts lv.stdout
-        puts lv.stderr
-        lv.error!
+        lvm = Mixlib::ShellOut.new("vgcreate --autobackup n --maxlogicalvolumes #{dev['maxlogicalvolumes']} --metadatatype #{dev['metadatatype']} --vgmetadatacopies #{dev['vgmetadatacopies']} -y #{dev['name']} #{dev['target']}").run_command
+        puts lvm.stdout
+        puts lvm.stderr
+        lvm.error!
       end
       not_if "vgs | grep -q #{dev['name']}"
     end
