@@ -39,6 +39,7 @@ node['lvm']['devices'].each do |dev|
         puts lv.stderr
         lv.error!
       end
+      not_if "pvs | grep -q #{dev['name']}"
     end
   when 'vg'
     ruby_block "create vg #{dev['name']}" do
@@ -48,6 +49,7 @@ node['lvm']['devices'].each do |dev|
         puts lv.stderr
         lv.error!
       end
+      not_if "vgs | grep -q #{dev['name']}"
     end
   end
 end
