@@ -46,9 +46,9 @@ unless node['lvm']['devices'].nil?
       ruby_block "create lv #{dev['name']}" do
         block do
           if dev['thin']
-            lvm = Mixlib::ShellOut.new("lvcreate -l #{dev['size']} --type thin-pool --thinpool #{dev['name']} #{dev['target']}").run_command
+            lvm = Mixlib::ShellOut.new("lvcreate -L #{dev['size']} --poolmetadatasize #{dev['poolmetadatasize']} --type thin-pool --thinpool #{dev['name']} #{dev['target']}").run_command
           else
-            lvm = Mixlib::ShellOut.new("lvcreate --name #{dev['name']} -l #{dev['size']} #{dev['target']}").run_command
+            lvm = Mixlib::ShellOut.new("lvcreate --name #{dev['name']} --metadatasize #{dev['metadatasize']} -L #{dev['size']} #{dev['target']}").run_command
           end
           puts lvm.stdout
           puts lvm.stderr
