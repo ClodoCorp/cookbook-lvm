@@ -48,7 +48,7 @@ unless node['lvm']['devices'].nil?
           if dev['thin']
             lvm = Mixlib::ShellOut.new("lvcreate -L #{dev['size']} --poolmetadatasize #{dev['poolmetadatasize']} --type thin-pool --thinpool #{dev['name']} #{dev['target']}").run_command
           else
-            lvm = Mixlib::ShellOut.new("lvcreate --name #{dev['name']} --metadatasize #{dev['metadatasize']} -L #{dev['size']} #{dev['target']}").run_command
+            lvm = Mixlib::ShellOut.new("lvcreate --name #{dev['name']} -L #{dev['size']} #{dev['target']}").run_command
           end
           puts lvm.stdout
           puts lvm.stderr
