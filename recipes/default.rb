@@ -21,12 +21,17 @@ node['lvm']['packages'].each do |pkg|
   package pkg
 end
 
+service "lvm2" do
+  action [:start]
+end
+
 template '/etc/lvm/lvm.conf' do
   source 'lvm.conf.erb'
   owner 'root'
   mode 0644
   variables(:variables => node['lvm']['conf'])
   action :create
+  notifies :start, "service[lvm2]", :delayed
 end
 
 unless node['lvm']['devices'].nil?
