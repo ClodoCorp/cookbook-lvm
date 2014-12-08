@@ -21,6 +21,13 @@ def create_lvm(name, dev)
         puts lvm.stdout
         puts lvm.stderr
         lvm.error!
+        if dev['fs']
+         fsopts = dev['fsopts'].nil? ? "" : dev['fsopts']
+         filesystem = Mixlib::ShellOut.new("mkfs.#{dev['fs']} #{fsopts} /dev/#{dev['target']}/#{name}").run_command
+         puts filesystem.stdout
+         puts filesystem.stderr
+         filesystem.error!
+        end
       end
       not_if "lvs | grep -q #{name}"
     end
