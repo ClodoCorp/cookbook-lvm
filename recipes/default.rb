@@ -21,8 +21,18 @@ node['lvm']['packages'].each do |pkg|
   package pkg
 end
 
-service "lvm2" do
+service 'lvm2' do
+  case node['platform']
+    when 'debian'
+      case node['platform_version']
+        when /^8\./
+          service_name 'lvm2-activation.service'
+          provider Chef::Provider::Service::Systemd
+      end
+  end
   action [:start]
+  subscribes :start, 'template[/etc/lvm/lvm.conf]', :delayed
+  subscribes :start, 'template[/etc/mdadm/mdadm.conf]', :delayed
 end
 
 template '/etc/lvm/lvm.conf' do
