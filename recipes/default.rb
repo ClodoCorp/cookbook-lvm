@@ -21,27 +21,29 @@ node['lvm']['packages'].each do |pkg|
   package pkg
 end
 
-service 'lvm2' do
-  case node['platform']
+case node['platform_family']
+when 'debian','ubuntu'
+  service 'lvm2' do
+    case node['platform']
     when 'debian'
       case node['platform_version']
-        when /^8\./
-          service_name 'lvm2-activation.service'
-          provider Chef::Provider::Service::Systemd
+      when /^8\./
+        service_name 'lvm2-activation.service'
+        provider Chef::Provider::Service::Systemd
       end
+    end
+    action [:start]
+    subscribes :start, "template[#{node['lvm']['config_file']}]", :delayed
+    subscribes :start, "template[#{node['mdadm']['config_file']}]", :delayed
   end
-  action [:start]
-  subscribes :start, 'template[/etc/lvm/lvm.conf]', :delayed
-  subscribes :start, 'template[/etc/mdadm/mdadm.conf]', :delayed
 end
 
-template '/etc/lvm/lvm.conf' do
+template node['lvm']['config_file'] do
   source 'lvm.conf.erb'
   owner 'root'
   mode 0644
   variables(:variables => node['lvm']['conf'])
   action :create
-  notifies :start, "service[lvm2]", :delayed
 end
 
 unless node['lvm']['devices'].nil?

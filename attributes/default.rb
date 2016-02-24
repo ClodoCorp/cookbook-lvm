@@ -73,3 +73,4 @@ default['lvm']['conf']['activation']['monitoring'] = 0
 default['lvm']['conf']['activation']['polling_interval'] = 15
 
 default['lvm']['packages'] = ['lvm2']
+default['lvm']['config_file'] = '/etc/lvm/lvm.conf'
