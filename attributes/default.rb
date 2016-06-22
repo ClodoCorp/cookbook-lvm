@@ -71,6 +71,6 @@ default['lvm']['conf']['activation']['thin_pool_autoextend_percent'] = 20
 default['lvm']['conf']['activation']['use_mlockall'] = 0
 default['lvm']['conf']['activation']['monitoring'] = 0
 default['lvm']['conf']['activation']['polling_interval'] = 15
-
+default['lvm']['service_name'] = ''
 default['lvm']['packages'] = ['lvm2']
 default['lvm']['config_file'] = '/etc/lvm/lvm.conf'

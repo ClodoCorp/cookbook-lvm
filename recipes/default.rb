@@ -21,6 +21,16 @@ node['lvm']['packages'].each do |pkg|
   package pkg
 end
 
+if node['lvm']['service_name'].nil?
+  case node['platform']
+  when 'debian'
+    case node['platform_version']
+    when /^8\./
+      node['lvm']['service_name'] = 'lvm2-activation'
+    end
+  end
+end
+
 case node['platform_family']
 when 'debian','ubuntu'
   service 'lvm2' do
@@ -28,7 +38,7 @@ when 'debian','ubuntu'
     when 'debian'
       case node['platform_version']
       when /^8\./
-        service_name 'lvm2-activation.service'
+        service_name node['lvm']['service_name']
         provider Chef::Provider::Service::Systemd
       end
     end
